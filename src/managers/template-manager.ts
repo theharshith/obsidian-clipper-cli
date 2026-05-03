@@ -4,6 +4,7 @@ import browser from '../utils/browser-polyfill';
 import { generalSettings } from '../utils/storage-utils';
 import { addPropertyType } from './property-types-manager';
 import { getMessage } from '../utils/i18n';
+import { createDefaultTemplate as createSharedDefaultTemplate } from '../utils/default-template';
 
 export let templates: Template[] = [];
 export let editingTemplateIndex = -1;
@@ -111,25 +112,11 @@ async function prepareTemplateForSave(template: Template): Promise<[string[], st
 }
 
 export function createDefaultTemplate(): Template {
-	return {
-		id: Date.now().toString() + Math.random().toString(36).slice(2, 11),
+	return createSharedDefaultTemplate({
 		name: getMessage('defaultTemplateName'),
-		behavior: 'create',
-		noteNameFormat: '{{title}}',
-		path: 'Clippings',
-		noteContentFormat: '{{content}}',
-		context: "",
-		properties: [
-			{ id: Date.now().toString() + Math.random().toString(36).slice(2, 11), name: 'title', value: '{{title}}' },
-			{ id: Date.now().toString() + Math.random().toString(36).slice(2, 11), name: 'source', value: '{{url}}' },
-			{ id: Date.now().toString() + Math.random().toString(36).slice(2, 11), name: 'author', value: '{{author|split:", "|wikilink|join}}' },
-			{ id: Date.now().toString() + Math.random().toString(36).slice(2, 11), name: 'published', value: '{{published}}' },
-			{ id: Date.now().toString() + Math.random().toString(36).slice(2, 11), name: 'created', value: '{{date}}' },
-			{ id: Date.now().toString() + Math.random().toString(36).slice(2, 11), name: 'description', value: '{{description}}' },
-			{ id: Date.now().toString() + Math.random().toString(36).slice(2, 11), name: 'tags', value: 'clippings' }
-		],
-		triggers: []
-	};
+		templateId: Date.now().toString() + Math.random().toString(36).slice(2, 11),
+		createId: () => Date.now().toString() + Math.random().toString(36).slice(2, 11),
+	});
 }
 
 export function getEditingTemplateIndex(): number {
